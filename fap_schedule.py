@@ -16,7 +16,7 @@ async def on_ready():
 
 @bot.command()
 async def fap(ctx):
-    add_user(ctx.author)
-    await ctx.send("i did the thing")
+    add_fap(ctx.author)
+    await ctx.send("UOHHHHHHH i logged ur cum")
 
 bot.run(TOKEN)
