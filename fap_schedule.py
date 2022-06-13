@@ -19,8 +19,4 @@ async def fap(ctx):
     add_fap(ctx.author)
     await ctx.send("cummed")
 
-@bot.command()
-async def test(ctx):
-    await ctx.send(get_all())
-
 bot.run(TOKEN)
