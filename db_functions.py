@@ -1,5 +1,4 @@
 import sqlite3
-from random import choice
 
 db = sqlite3.connect("db.sqlite3")
 cursor = db.cursor()
