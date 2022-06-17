@@ -2,22 +2,23 @@ import os
 import discord
 from tabulate import tabulate
 from db_functions import *
-from discord.ext import commands
+from discord.ext import commands, menus
 from dotenv import load_dotenv
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
+HEADERS = ["Fap Id", "Coomer", "Date", "Time"]
+TABLEFMT = "fancy_grid"
+
+class TableSource(menus.ListPageSource):
+    async def format_page(self, menu, entries):
+        return f"```{tabulate(entries, headers=HEADERS, tablefmt=TABLEFMT)}```"
+
+def paginate(entries):
+    for i in range(0, len(entries), 10): 
+        yield entries[i:i + 10]
 
 bot = commands.Bot(command_prefix=["c!", "cum"], intents=discord.Intents.all())
-
-def remove_markdown(string):
-    special_chars = "*~_|`"
-    result = ""
-    for char in string:
-        if char in special_chars:
-            result += "\\"
-        result += char
-    return result    
 
 @bot.event
 async def on_ready():
@@ -45,8 +46,9 @@ async def faps(ctx, member:discord.Member=None):
     if not faps:
         await ctx.send("No fap data to show.")
         return
-    table = tabulate(faps, headers=["Fap Id", "Coomer", "Date", "Time"], tablefmt="fancy_grid")
-    await ctx.send(f"```{table}```")
+    formatter = TableSource(faps, per_page=10)
+    menu = menus.MenuPages(formatter)
+    await menu.start(ctx)
 
 @bot.command()
 async def allfaps(ctx):
@@ -54,7 +56,8 @@ async def allfaps(ctx):
     if not faps:
         await ctx.send("No fap data to show.")
         return
-    table = tabulate(faps, headers=["Fap Id", "Coomer", "Date", "Time"], tablefmt="fancy_grid")
-    await ctx.send(f"```{table}```")
+    formatter = TableSource(faps, per_page=10)
+    menu = menus.MenuPages(formatter)
+    await menu.start(ctx)
 
 bot.run(TOKEN)
