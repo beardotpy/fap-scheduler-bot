@@ -3,20 +3,31 @@ import sqlite3
 db = sqlite3.connect("db.sqlite3")
 cursor = db.cursor()
 
-def add_user(user):
+def add_user(user, timezone):
     cursor.execute(
         ("INSERT INTO " 
-         "users (name, user_id) "
-         "VALUES (?, ?)"),
-        (user.name, user.id)
+         "users (name, user_id, timezone) "
+         "VALUES (?, ?, ?)"),
+        (user.name, user.id, timezone)
     )
     db.commit()
-    print("added a user")
+
+def get_user(user):
+    return cursor.execute(
+        ("SELECT * "
+         "FROM users "
+         f"WHERE user_id = {user.id}")
+    )
+
+def change_timezone(user, timezone):
+    cursor.execute(
+        ("UPDATE users "
+         f"SET timezone = {timezone} "
+         f"WHERE id = {user.id}")
+    )
+    db.commit()
 
 def add_fap(user):
-    user_exists = cursor.execute(f"SELECT * FROM users WHERE user_id = {user.id}").fetchone()
-    if not user_exists:
-        add_user(user)
     cursor.execute(
         ("INSERT INTO "
          "faps (user_id, date) "
