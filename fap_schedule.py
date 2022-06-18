@@ -2,6 +2,7 @@ import os
 import discord
 from tabulate import tabulate
 from db_functions import *
+from random import choice
 from discord.ext import commands, menus
 from dotenv import load_dotenv
 
@@ -42,6 +43,12 @@ TIMEZONES = {
     "BET": "-3:00",
     "CAT": "-1:00"
 }
+RESPONSES = [
+    "You did the deed. Nice.",
+    "Please DO NOT announce to the server when you are going to masturbate.",
+    "UOOOHHHHHHHH :sob: :sob: :sob:",
+    "UWAOOOOOO SEEEEEEXXXXXX!!!!"
+]
 
 class TableSource(menus.ListPageSource):
     async def format_page(self, menu, entries):
@@ -95,7 +102,7 @@ async def fap(ctx):
     if not check:
         return
     add_fap(ctx.author)
-    await ctx.reply("You did the deed. Nice.")
+    await ctx.reply(choice(RESPONSES))
 
 @bot.command(aliases=["unnut", "uncum"])
 async def unfap(ctx, fap_id=None):
