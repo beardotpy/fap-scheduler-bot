@@ -55,16 +55,17 @@ def remove_fap(user, fap_id = None):
     if cursor.rowcount == 0:
         raise Exception()
 
-def get_faps(user=None):
+def get_faps(user, offset):
+    hour_offset, minute_offset = offset[0]+offset[1], offset[0]+offset[2]
     if not user:
         faps = cursor.execute(
-            ("SELECT faps.fap_id, users.name, STRFTIME('%d/%m/%Y', faps.date), STRFTIME('%H:%M', faps.date) "
+            (f"SELECT faps.fap_id, users.name, STRFTIME('%d/%m/%Y', faps.date, '{hour_offset} hours', '{minute_offset} minutes'), STRFTIME('%H:%M', faps.date, '{hour_offset} hours', '{minute_offset} minutes') "
              "FROM faps, users "
              "WHERE faps.user_id = users.user_id")
         ).fetchall()
         return faps
     faps = cursor.execute(
-        ("SELECT faps.fap_id, users.name, STRFTIME('%d/%m/%Y', faps.date), STRFTIME('%H:%M', faps.date) "
+        (f"SELECT faps.fap_id, users.name, STRFTIME('%d/%m/%Y', faps.date, '{hour_offset} hours', '{minute_offset} minutes'), STRFTIME('%H:%M', faps.date, '{hour_offset} hours', '{minute_offset} minutes') "
          "FROM faps, users "
          "WHERE faps.user_id = ? AND users.user_id = ?"),
         (user.id, user.id)

@@ -7,11 +7,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
-HEADERS = ["Fap Id", "Coomer", "Date", "Time"]
-TABLEFMT = "fancy_grid"
 TIMEZONES = {
-    "GMT":  "",
-    "UTC":  "",
+    "GMT":  "+0:00",
+    "UTC":  "+0:00",
     "ECT":  "+1:00",
     "EET":  "+2:00",
     "ART":  "+2:00",
@@ -47,15 +45,20 @@ TIMEZONES = {
 
 class TableSource(menus.ListPageSource):
     async def format_page(self, menu, entries):
-        return f"```{tabulate(entries, headers=HEADERS, tablefmt=TABLEFMT)}```"
+        return f"```{tabulate(entries, headers=['Fap Id', 'Coomer', 'Date', 'Time'], tablefmt='fancy_grid')}```"
 
 bot = commands.Bot(command_prefix=["c!", "cum", "cum "], intents=discord.Intents.all())
 
-def convert_to_sqlite_modifier(offset):
-    if not offset:
-        return None
-    sign = offset.lstrip()
-    offset = offset.lstring()
+def get_modifier(user):
+    timezone = cursor.execute(
+        ("SELECT timezone "
+         "FROM users "
+         f"WHERE user_id = {user.id}")
+    ).fetchone()[0]
+    if not timezone:
+        return ("+", "0", "00")
+    offset = TIMEZONES[timezone]
+    sign, offset = offset[0], offset[1:]
     hours, minutes = offset.split(":")
     return (sign, hours, minutes)
 
@@ -72,9 +75,8 @@ async def user_check(ctx):
 @bot.event
 async def on_ready():
     print(f"{bot.user} is ready.")
-#CREATE TABLE "faps" ( "fap_id"INTEGER NOT NULL UNIQUE, "user_id"INTEGER NOT NULL, "date"TEXT, FOREIGN KEY("user_id") REFERENCES "users"("user_id"), PRIMARY KEY("fap_id" AUTOINCREMENT) )
-#CREATE TABLE "users" ( "name"TEXT NOT NULL UNIQUE, "user_id"INTEGER NOT NULL UNIQUE, "timezone" TEXT NOT NULL, PRIMARY KEY("user_id") )
-@bot.command()
+
+@bot.command(aliases=["tz", "set_tz", "settime", "settimezone", "settz"])
 async def timezone(ctx, timezone):
     timezone = timezone.upper()
     if timezone not in TIMEZONES.keys():
@@ -111,7 +113,7 @@ async def unfap(ctx, fap_id=None):
 async def faps(ctx, member:discord.Member=None):
     if member == None:
         member = ctx.author
-    faps = get_faps(member)
+    faps = get_faps(member, get_modifier(ctx.author))
     if not faps:
         await ctx.send("No fap data to show.")
         return
@@ -121,7 +123,7 @@ async def faps(ctx, member:discord.Member=None):
 
 @bot.command(aliases=["allstat", "allstats"])
 async def allfaps(ctx):
-    faps = get_faps()
+    faps = get_faps(None, get_modifier(ctx.author))
     if not faps:
         await ctx.send("No fap data to show.")
         return
