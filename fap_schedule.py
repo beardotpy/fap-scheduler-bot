@@ -1,5 +1,4 @@
 import os
-from re import L
 import discord
 from tabulate import tabulate
 from db_functions import *
@@ -67,37 +66,39 @@ def paginate(entries):
 async def user_check(ctx):
     if get_user(ctx.author):
         return True
-    await ctx.send("Please first set your timezone with the `timezone` command.\nExample: `c!timezone [your_timezone]`\nRefer to this website for a list of timezones if needed: https://publib.boulder.ibm.com/tividd/td/TWS/SC32-1274-02/en_US/HTML/SRF_mst273.htm")
+    await ctx.send("Please first set your timezone with the `timezone` command.\nExample: `c!timezone PST`\nRefer to this website for a list of timezones if needed:\nhttps://publib.boulder.ibm.com/tividd/td/TWS/SC32-1274-02/en_US/HTML/SRF_mst273.htm")
     return False
 
 @bot.event
 async def on_ready():
     print(f"{bot.user} is ready.")
-
+#CREATE TABLE "faps" ( "fap_id"INTEGER NOT NULL UNIQUE, "user_id"INTEGER NOT NULL, "date"TEXT, FOREIGN KEY("user_id") REFERENCES "users"("user_id"), PRIMARY KEY("fap_id" AUTOINCREMENT) )
+#CREATE TABLE "users" ( "name"TEXT NOT NULL UNIQUE, "user_id"INTEGER NOT NULL UNIQUE, "timezone" TEXT NOT NULL, PRIMARY KEY("user_id") )
 @bot.command()
 async def timezone(ctx, timezone):
-    if get_user(ctx.author):
+    timezone = timezone.upper()
+    if timezone not in TIMEZONES.keys():
+        await ctx.send("Invalid timezone. Refer to this for a list of valid timezeons.\nhttps://publib.boulder.ibm.com/tividd/td/TWS/SC32-1274-02/en_US/HTML/SRF_mst273.htm")
+        return
+    elif get_user(ctx.author):
         change_timezone(ctx.author, timezone)
         await ctx.send("Updated your timezone.")
-        return
-    elif timezone.upper() not in TIMEZONES.keys():
-        await ctx.send("Invalid timezone. Refer to this for a list of valid timezeons.\nhttps://publib.boulder.ibm.com/tividd/td/TWS/SC32-1274-02/en_US/HTML/SRF_mst273.htm")
         return
     add_user(ctx.author, timezone)
     await ctx.reply("Officially registered coomer.")
 
 @bot.command(aliases=["cum", "nut"])
 async def fap(ctx):
-    user_check = await user_check(ctx)
-    if not user_check:
+    check = await user_check(ctx)
+    if not check:
         return
     add_fap(ctx.author)
     await ctx.reply("You did the deed. Nice.")
 
 @bot.command(aliases=["unnut", "uncum"])
 async def unfap(ctx, fap_id=None):
-    user_check = await user_check(ctx)
-    if not user_check:
+    check = await user_check(ctx)
+    if not check:
         return
     try:
         remove_fap(ctx.author, fap_id)

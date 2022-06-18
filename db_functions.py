@@ -17,13 +17,14 @@ def get_user(user):
         ("SELECT * "
          "FROM users "
          f"WHERE user_id = {user.id}")
-    )
+    ).fetchone()
 
 def change_timezone(user, timezone):
     cursor.execute(
         ("UPDATE users "
-         f"SET timezone = {timezone} "
-         f"WHERE id = {user.id}")
+         "SET timezone = ? "
+         "WHERE user_id = ?"),
+         (timezone, user.id)
     )
     db.commit()
 
