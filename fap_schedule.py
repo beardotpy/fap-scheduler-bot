@@ -47,7 +47,16 @@ RESPONSES = [
     "You did the deed. Nice.",
     "Please DO NOT announce to the server when you are going to masturbate.",
     "UOOOHHHHHHHH :sob: :sob: :sob:",
-    "UWAOOOOOO SEEEEEEXXXXXX!!!!"
+    "UWAOOOOOO SEEEEEEXXXXXX!!!!",
+    "cough cough oh fuck houughh hooh fuck oh jesus oh shitohfuck...fuck...oh fuck...o h h h...",
+    "the birds are singing, the flowers are blooming, my dick is throbbing, what a beautiful day for cooming.",
+    "28 INCOGNITO TABS. YOU DIDN’T WANT TO GIVE YOUR SEARCH HISTORY A CHANCE, HUH?\nDID YOU FEEL LUST? HORNY?\nYOUR PP WAS BLEEDING! BEGGING YOU FOR MERCY! BUT YOU BEAT IT AGAIN AND AGAIN AND AGAIN!\nJUST SAY YOU WERE HORNY! ***JUST SAY IT!!!***",
+    "*Mmmnf-*",
+    "URGHHHHH AGHHH OOHFUCK OOOHNGGGUHH SHNNHHHSHNNHSSHHNN AUGHHHHHHHHHHHHHHH MRNGGGHHHH MFRNNNFMRNFNRMFNRN AUGHRHHHHHHG",
+    "sniff NNGHH AUUGHHH MMM HNGGHOHGODDD AAAAAAAAAA",
+    "AUUGUUHGHHH ...I'M....C-COOMING!!!!!",
+    "HUHHAHHHUUUHHAAAHUUUHHHAHHUH",
+    "OH FUCK ITS EVERYWHERE AAAAAAAAAAAAAAAAAAAAA OOOOOOOOOOO HRAAAAAAUGH"
 ]
 
 class TableSource(menus.ListPageSource):
